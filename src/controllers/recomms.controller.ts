@@ -139,7 +139,7 @@ export const updateStatus = async (req: Request, res : Response)  => {
 
 export const deleteSuggestion = async (req: Request, res : Response)  => {
     try {
-      const deletedSuggestion = await Suggestion.findByIdAndDelete(req.params.id);
+      const deletedSuggestion = await Suggestion.findOneAndDelete({id: req.params.id});
       
       if (!deletedSuggestion) {
         return res.status(404).json({ message: 'Suggestion not found' });
