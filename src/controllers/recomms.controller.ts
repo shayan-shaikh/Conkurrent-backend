@@ -48,6 +48,8 @@ export const addNewSuggestion = async (req: Request, res : Response) => {
     
     const savedSuggestion = await newSuggestion.save();
     res.status(201).json(savedSuggestion);
+    console.log('suggestion received --> ', savedSuggestion)
+    console.log('Suggestion saved successfully✅')
   } catch (err) {
     console.error('Error creating suggestion:', err);
     res.status(500).json({ message: 'Server error' });
