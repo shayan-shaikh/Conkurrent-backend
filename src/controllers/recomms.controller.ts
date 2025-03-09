@@ -1,6 +1,7 @@
 import { validationResult } from "express-validator";
 import Suggestion  from "../schema/recomms.schema.js";
 import { Request, Response } from 'express';
+import {v4 as uuidv4} from 'uuid';
 
 export const getAllSuggestions = async (req: Request, res : Response) => {
   try {
@@ -36,14 +37,15 @@ export const addNewSuggestion = async (req: Request, res : Response) => {
   }
 
   try {
-    const { topic, description, status } = req.body;
+    const { topic, description, status, id } = req.body;
     
     const newSuggestion = new Suggestion({
       topic,
       description,
       status: status || 'New',
       addedAt: new Date(),
-      completedAt: status === 'Done' ? new Date() : null
+      completedAt: status === 'Done' ? new Date() : null,
+      id: id ? id : uuidv4()
     });
     
     const savedSuggestion = await newSuggestion.save();

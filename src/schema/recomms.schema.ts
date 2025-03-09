@@ -1,6 +1,10 @@
 import mongoose, { Schema } from "mongoose";
 
 const suggestionSchema = new Schema({
+    id:{
+      type:String,
+      required:true
+    },
     topic: {
       type: String,
       required: true,
