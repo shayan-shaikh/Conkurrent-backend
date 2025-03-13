@@ -37,7 +37,7 @@ export const addNewSuggestion = async (req: Request, res : Response) => {
   }
 
   try {
-    const { topic, description, status, id, submittedBy } = req.body;
+    const { topic, description, status, id, submittedBy, featureMe } = req.body;
     
     const newSuggestion = new Suggestion({
       topic,
@@ -46,7 +46,8 @@ export const addNewSuggestion = async (req: Request, res : Response) => {
       addedAt: new Date(),
       completedAt: status === 'Done' ? new Date() : null,
       id: id ? id : uuidv4(),
-      submittedBy
+      submittedBy,
+      featureMe
     });
     
     const savedSuggestion = await newSuggestion.save();

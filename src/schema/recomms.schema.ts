@@ -31,6 +31,10 @@ const suggestionSchema = new Schema({
     submittedBy: {
       type: String,
       required: true
+    },
+    featureMe: {
+      type: Boolean,
+      default: false
     }
   });
   

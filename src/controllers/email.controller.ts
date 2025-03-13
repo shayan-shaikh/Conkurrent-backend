@@ -1,11 +1,11 @@
 import { Request, Response } from 'express';
 import { transporter } from '../utils/nodemailer.config';
-import { feedbackTitle, getsuggestionResponse } from '../constants/constants';
+import { collabResponse, feedbackTitle, getsuggestionResponse } from '../constants/constants';
 import { getTemplate } from '../utils/email.template';
 
 export const sendSuggestionFeedback = async (req: Request, res: Response) => {
     try {
-      const { email, name } = req.body;
+      const { email, name, featureMe } = req.body;
       console.log(
         "--------------nodemailer details are------",
         process.env.NODEMAILER_EMAIL
@@ -16,7 +16,7 @@ export const sendSuggestionFeedback = async (req: Request, res: Response) => {
         to: email,
         cc: process.env.ADMIN_EMAIL_IDS,
         subject: feedbackTitle,
-        html: getTemplate(getsuggestionResponse(name), process.env.UI_URL as string),
+        html: featureMe ? getTemplate(collabResponse(name), process.env.UI_URL as string) : getTemplate(getsuggestionResponse(name), process.env.UI_URL as string),
       };
   
       await new Promise((resolve, reject) => {
