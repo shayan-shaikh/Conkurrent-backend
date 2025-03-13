@@ -37,7 +37,7 @@ export const addNewSuggestion = async (req: Request, res : Response) => {
   }
 
   try {
-    const { topic, description, status, id } = req.body;
+    const { topic, description, status, id, submittedBy } = req.body;
     
     const newSuggestion = new Suggestion({
       topic,
@@ -45,7 +45,8 @@ export const addNewSuggestion = async (req: Request, res : Response) => {
       status: status || 'New',
       addedAt: new Date(),
       completedAt: status === 'Done' ? new Date() : null,
-      id: id ? id : uuidv4()
+      id: id ? id : uuidv4(),
+      submittedBy
     });
     
     const savedSuggestion = await newSuggestion.save();
@@ -70,7 +71,7 @@ export const updateSuggestion = async (req: Request, res : Response)  => {
     const { topic, description, status } = req.body;
     
     // Check if status is being updated to 'Done'
-    const suggestion = await Suggestion.findById(req.params.id);
+    const suggestion = await Suggestion.findOne({id: req.params.id});
     if (!suggestion) {
       return res.status(404).json({ message: 'Suggestion not found' });
     }
@@ -80,8 +81,8 @@ export const updateSuggestion = async (req: Request, res : Response)  => {
       ? (suggestion.status !== 'Done' ? new Date() : suggestion.completedAt) 
       : null;
     
-    const updatedSuggestion = await Suggestion.findByIdAndUpdate(
-      req.params.id,
+    const updatedSuggestion = await Suggestion.findOneAndUpdate(
+      {id:req.params.id},
       { 
         topic, 
         description, 
@@ -95,7 +96,7 @@ export const updateSuggestion = async (req: Request, res : Response)  => {
       return res.status(404).json({ message: 'Suggestion not found' });
     }
     
-    res.json(updatedSuggestion);
+    res.status(200).json(updatedSuggestion);
   } catch (err) {
     console.error('Error updating suggestion:', err);
     res.status(500).json({ message: 'Server error' });
@@ -113,7 +114,7 @@ export const updateStatus = async (req: Request, res : Response)  => {
         }
         
         // Find current suggestion
-        const suggestion = await Suggestion.findById(req.params.id);
+        const suggestion = await Suggestion.findOne({id: req.params.id});
         if (!suggestion) {
           return res.status(404).json({ message: 'Suggestion not found' });
         }
@@ -123,13 +124,13 @@ export const updateStatus = async (req: Request, res : Response)  => {
           ? (suggestion.status !== 'Done' ? new Date() : suggestion.completedAt) 
           : null;
         
-        const updatedSuggestion = await Suggestion.findByIdAndUpdate(
-          req.params.id,
+        const updatedSuggestion = await Suggestion.findOneAndUpdate(
+          {id: req.params.id},
           { status, completedAt },
           { new: true }
         );
         
-        res.json(updatedSuggestion);
+        res.status(200).json(updatedSuggestion);
       } catch (err) {
         console.error('Error updating suggestion status:', err);
         res.status(500).json({ message: 'Server error' });
@@ -145,7 +146,7 @@ export const deleteSuggestion = async (req: Request, res : Response)  => {
         return res.status(404).json({ message: 'Suggestion not found' });
       }
       
-      res.json({ message: 'Suggestion deleted successfully' });
+      res.status(200).json({ message: 'Suggestion deleted successfully' });
     } catch (err) {
       console.error('Error deleting suggestion:', err);
       res.status(500).json({ message: 'Server error' });

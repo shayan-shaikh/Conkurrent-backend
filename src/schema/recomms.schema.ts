@@ -27,6 +27,10 @@ const suggestionSchema = new Schema({
     completedAt: {
       type: Date,
       default: null
+    },
+    submittedBy: {
+      type: String,
+      required: true
     }
   });
   
