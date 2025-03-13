@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { connectDb } from './db/connect';
-import routes from './routes/suggestion.route'
+import routes from './routes/index'
 
 dotenv.config();
 
